@@ -1,0 +1,370 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[english,greek]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{pgfplots}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usetikzlibrary{automata,topaths}
+  
+\begin{document}
+
+
+
+\title{Διαφορικές Εξισώσεις}
+\author{Πέρκας Δημήτρης}
+
+\maketitle
+
+\pagebreak
+
+
+\tableofcontents
+\newpage
+
+
+
+
+\section{Συνήθεις Διαφορικές εξισώσεις}
+
+\subsection{Εισαγωγικά}
+
+\begin{itemize}
+\item Κάθε συνάρτηση που περιέχει παραγώγους μιας άγνωστης συνάρτησης λέγεται \underline{διαφορική εξίσωση}
+\item Διαφορικές εξισώσεις διακρίνονται σε \underline{συνήθεις} (ΣΔΕ) και \underline{μερικές} (ΜΔΕ)
+\item Στις συνήθεις η άγνωστη συνάρτηση εξαρτάται μόνο απο μια ανεξάρτητη μεταλητή και στις μερικές απο δύο ή περισσότερες ανεξάρτητες μεταβλητές.
+\item \underline{Τάξη} μιας διαφορικής εξίσωσης λέγεται η τάξη της μεγαλύτερης παραγώγου που εμφανίζεται στην εξίσωση.
+Έτσι οι διαφορικές εξισώσεις διακρίνονται σε πρώτης, δευτέρας, ... ν-τάξης.\\
+Π.χ.
+
+\begin{equation*}
+     y'(x)=ay(x)\\
+    \qquad \text{Σ.Δ.Ε. πρώτης τάξης} 
+\end{equation*}
+
+\begin{equation*}
+	ay''(x)=by'(x) + y(x) \\
+	\qquad \text{Σ.Δ.Ε. δεύτερης τάξης }
+\end{equation*}
+
+\item Βαθμός μιας διαφορικής εξίσωσης λέγεται ο εκθέτης της μεγαλύτερης παραγώγου που εμφανίζεται στην εξίσωση, όταν η διαφορική εξίσωση εχει την μορφή αλγεβρικής εξίσωσης.\\
+Π.χ.
+\begin{equation*}
+	y'(x)=ay(x)
+	\qquad \text{Σ.Δ.Ε. πρώτης τάξης, πρώτου βαθμού}
+\end{equation*}
+
+\begin{equation*}
+	\left(y'(x)\right)^2 = ay(x)
+	\qquad \text{Σ.Δ.Ε. πρώτης τάξης, δευτέρου βαθμού.}
+\end{equation*}
+
+Η πιο γενική μορφή μιας συνήθους διαφορικής εξίσωσης (Σ.Δ.Ε.) ν-τάξης είναι:
+\begin{equation} \label{eq1}
+	f\left(x,y,y',y'',\cdots ,y^{(n)} \right)
+\end{equation}
+όπου $x$ είναι η ανεξάρτητη μεταβλητή, $y$ η άγνωστη συνάρτηση(εξαρτημένη μεταβλητή) και $y',y'',\cdots ,y^{(n)}$ οι παράγωγοι της $y$ πρώτης, δευτέρας, n-τάξεως.
+
+\item Οι διαφορικές εξισώσεις διακρίνονται σε γραμμικές και μη-γραμμικές.
+
+\item Μια Δ.Ε. λέγεται \underline{γραμμική} εάν είναι γραμμική ως προς την εξαρτημένη μεταβλητή $y$ και τις παραγώγους της που εμφανίζονται στην εξίσωση.\\
+Π.χ.
+\begin{equation*}
+	ay''(x)+ by'(x) + cy(x)=0
+    \qquad \text{(a)}
+    \qquad \text{γραμμική Σ.Δ.Ε.}
+\end{equation*}
+
+\item Εάν η διαφορική εξίσωση δεν είναι γραμμική λέγεται \underline{μη γραμμική} (είναι μη γραμμική ως προς την εξαρτημένη μεταβλητή $y$ και τις παραγώγους της που εμφανίζονται στην εξίσωση.)\\
+Π.χ.
+
+\begin{equation*}
+	ay''(x) + \underbrace{byy'(x)}_{\text{μη γραμμικός όρος}}+ cy(x)=0 , \\
+    \qquad \text{(1)}
+    \qquad \text{μη γραμμική Σ.Δ.Ε.}
+\end{equation*}
+
+\begin{equation*}
+	ay''(x) +by'(x)+ \underbrace{c\left(y(x)\right)^2}_{\text{μη γραμμικός όρος}} =0, \\
+   \qquad \text{(2)}
+   \qquad \text{μη γραμμική Σ.Δ.Ε.}
+\end{equation*}
+
+Εαν η $(1)$ μπορεί να λυθεί ως προς $y^{(n)}$, η Δ.Ε. γράφεται:
+
+\begin{equation} 
+	y^{(n)}=f\left(x,y,y', \cdots , y^{(n-1)}\right)
+\end{equation}
+
+Π.χ. αν η $(a)$ γράφεται: \\
+
+\begin{gather*}
+ay''(x)=-by'(x)-cy(x) \implies \\
+\implies y''(x)= -\frac{b}{a}y'(x)-\frac{c}{a}y(x) \, \, \, , \, \, \, \, \, \, \, \, \,   a\neq 0
+\end{gather*}
+
+\vspace{10mm}
+
+\item\textbf{{\large Λύση ή ολοκρήρωμα}} της $(2)$  είναι μια συνάρτηση $y(x)$ που την ικανοποιεί ταυτοτικά.
+
+\vspace{2cm}
+
+\subsection{Θεώρημα ύπραρξης λύσεων διαφορικών εξισώσεων:}
+Κάτω απο ορισμένες συνθήκες συνέχειας, όταν δοθούν $n$ αυθαίρετοι αριθμοί $a_0,a_1,\cdots , a_{n-1}$ και μια τιμή του $x=x_0$ , υπάρχει συνάρτηση $y(x)$ που ικανοποιεί την $(1)$ έτσι ώστε στο $x=x_0$ η $y$ και οι παράγωγοι $y',y'',\cdots , y^{(n-1)}$ να παίρνουν αντίστοιχα τις τιμές $a_0,a_1,\cdots , a_{n-1}$, δηλαδή:
+
+\begin{equation*}
+y(x_0)=a_0,y'(x_0)=a_1, y''(x_0)=a_2,\cdots,y^{(n-1)}(x_0)=a_{n-1}
+\end{equation*}
+
+Απο το θεώρημα έπεται οτι η λύση $y=y(x)$ θα εξαρτάται απο τις $n$-αυθαίρετες σταθερές , $a_0,a_1,a_2,\cdots, a_{n-1}$, δηλαδή:
+
+\begin{equation}
+y=y\left(x,a_0,a_1,a_2,\cdots, a_{n-1}\right)
+\end{equation}
+
+Η συνάρτηση $(3)$ λέγεται \underline{γενική λύση} ή \underline{γενικό ολοκρήρωμα} ή μια \underline{$n$-παραμετρική} \\ \underline{οικογένεια λύσεων} της $(1)$ και περιέχει τόσες αυθαίρετες σταθερές  όση είναι η τάξη της $(1)$
+Άν οι αυθαίρετες σταθερές πάρουν συγκεκριμένες τιμές , τότε προκύπτει μια \underline{μερική λύση} της $(1)$.
+
+\vspace{12cm}
+
+\section{Διαφορικές εξισώσεις πρώτης τάξης}
+Η γενική μορφή των Δ.Ε. πρώτης τάξης είναι:
+
+\[
+y'(x)=f(x,y) \tag{1}
+\]
+
+Η \underline{απλούστερη} Δ.Ε. πρώτης τάξης είναι αυτή στην οποία δεν εμφανίζεται η ανεξάρτηση μεταβλητή $y$, δηλαδή:
+
+\[
+y'=f(x) \tag{2}
+\]
+
+Αυτή είναι μια \underline{Δ.Ε. με χωριζώμενες μεταβλητές} 
+\[ dy =f(x)dx \, \, \,  ,\] \text{με γενική λύση} 
+\[
+y=\int f(x)dx + c \tag{3}
+\]
+οπου $c$ αυθαίρετη σταθερά.
+
+\end{itemize}
+
+\vspace{20mm}
+
+\section*{Παραδείγματα}
+
+\subsection{Εκθετικός νόμος ραδιοενεργών διασπάσεων}
+Οι διασπάσεις ραδιενεργών πυρήνων μπορούν να περιγραφούν απο μία Δ.Ε. χωριζόμενων μεταβλητών
+
+\[
+\frac{dN}{dt}=-\lambda N \tag{1}
+\]
+όπου $\displaystyle \frac{dN}{dt}$ : ο ρυθμός των πυρήνων που διασπώνται στη μονάδα του χρόνου. \vspace{6mm} \\ 
+$N$: Ο αριθμός των υπαρχόντων πυρήνων \vspace{1mm} \\ 
+$\lambda$: Σταθερά διάσπασης, η $(1)$ έχει μείον γιατί μιλάμε για μείωση των υπαρχόντων πυρήνων.
+
+\[
+(1)\implies \frac{dN}{N}=- \lambda dt \implies  \]
+Ολοκρηρώνοντας:
+
+\begin{gather*}
+\implies \int \frac{dN}{N}=-\int \lambda dt \implies \ln N =-\lambda t + c \implies \\ \\ \implies e^{\ln N}=e^{-\lambda t + c }\implies N=\underbrace{e^c}_{N_0}e^{-\lambda t} \implies \boxed{N=N_0e^{-\lambda t}}
+\end{gather*}
+Όπου $N_0$ ο αριθμός των ραδιενεργών πυρήνων σε χρόνο $t=0$.
+
+\subsection{Χρόνος ημίσειας ζωής}
+
+\begin{gather*}
+N=\frac{N_0}{2}=N_0e^{-\lambda t} \implies \frac{1}{2}=e^{-\lambda t} \implies \ln \frac{1}{2}=\ln e^{-\lambda t} \implies \ln 1 - \ln 2 =-\lambda t \implies \\ \ln 2 =\lambda t \implies \boxed{t=\frac{\ln 2}{\lambda}}
+\end{gather*}
+
+
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines = left,
+    xlabel = $t$,
+    ylabel = {$N$},
+]
+\addplot [
+    domain=-2:2,
+    samples=100, 
+    color=red,
+]
+{exp(-x)};
+\addlegendentry{$N=N_0e^{-\lambda t}$}
+\end{axis}
+\end{tikzpicture}
+
+\vspace{3cm}
+
+\subsection{Να λυθεί η διαφορική εξίσωση:}
+\[
+xydx +(x+1)dy=0 
+\]
+όταν $y>0$ και $x+1>0$.
+
+\subsubsection*{Λύση}
+
+\begin{gather*}
+\frac{dy}{y}=-\frac{x}{x+1}dx \implies \int \frac{dy}{y}=-\int \frac{x}{x+1}dx \implies  \\ \\ \implies\int \frac{dy}{y}=-\int \frac{x+1-1}{x+1}dx =-\int \frac{x+1}{x+1}dx + \int\frac{1}{x+1}dx \implies  \\ \\ \implies \ln |y| =-x +\ln |x+1| + c \implies \ln y =-x +\ln(x+1) +c \implies \\ \\ \implies e^{\ln y}=e^{-x+ \ln(x+1)+c } \implies y=\underbrace{e^c}_{c_1}e^{-x}e^{\ln(x+1)} \implies y=c_1 e^{-x}(x+1) \implies \\ \\ \implies \boxed{y=c_1 (x+1)e^{-x}}
+\end{gather*}
+
+\vspace{1cm}
+
+\section{Άσκηση}
+\subsection{Να λυθεί η διαφορική εξίσωση:}
+
+\begin{equation*}
+\left(y^2 -1\right)dx + y(x-1)dy=0
+\end{equation*}
+
+όπου $(x+1)$ και $\left(y^2 -1 \right) \neq 0,  x \geqslant 0$ και $y\in(-\infty ,1]\cup [1,\infty)$
+
+\vspace{30mm}
+
+\section{Γραμμική διαφορική εξίσωση πρώτης τάξης}
+
+Μια γραμμική διαφορική εξίσωση πρώτης τάξης είναι της μορφής: 
+
+\begin{equation} \tag{1}
+y' +p(x)y=q(x)
+\end{equation}
+
+όπου $p$ και $q$ γνωστές συναρτήσεις της μεταβλητής τιμής $x$ που είναι συνεχής σ'ένα διάστημα  της πραγματικής ευθείας\\
+
+Πολλαπλασιάζοντας και τα δύο μέλη της $(1)$ με \(e^{\int p(x)dx}\) παίρνουμε:
+
+\begin{equation*}
+\mbox{\large\(\underbrace{y'e^{\int p(x)dc} + p(x)ye^{\int p(x)dx}}=q(x)e^{\int p(x)dx} \implies \left(ye^{\int p(x)dx}\right)' = q(x)e^{\int p(x)dx}\)}
+\end{equation*}
+
+Οπότε ολοκρηρώνοντας έχουμε:
+
+\begin{equation*}
+\mbox{\large\( 
+ye^{\int p(x)dx}=\int q(x)e^{\int p(x)dx}dx +c
+\)} 
+\end{equation*}
+όπου $c$ είναι αυθαίρετη σταθερά. Καταλήγουμε λοιπόν στο εξής συμπέρασμα: \\
+
+Οι λύσεις της γραμμικής Δ.Ε. πρώτης τάξης $(1)$ δίνονται απο τον τύπο: \\
+
+
+\begin{equation*}
+\boxed{\mbox{\large\( 
+y=e^{-\int p(x)dx} \left[c+ \int q(x)e^{\int p(x)dx}dx\right]
+\)}} 
+\end{equation*}
+όπου $c$ αυθαίρετη σταθερά.
+
+\vspace{2cm}
+
+\section{Παραδείγματα}
+
+\subsection{Να λυθεί το Π.Α.Τ.:} 
+
+\begin{equation*}
+\mbox{\large\(xy'+2y=\sin x \)}
+\end{equation*}
+
+
+με \(y\left(\frac{\pi}{2}\right)=1\)
+
+\subsubsection*{Λύση}
+
+Η Δ.Ε. είναι γραμμική:
+
+\begin{gather*}
+xy'+2y=\sin x \implies
+\end{gather*}
+\begin{equation} \tag{1}
+\implies y'+\frac{2}{x}y=\frac{\sin x}{x}
+\end{equation}
+
+με $\displaystyle p(x)=\frac{2}{x}$ και $\displaystyle q(x)=\frac{\sin x}{x}$, οπότε ο πολλαπλασιαστής είναι: \\
+
+\begin{equation} \tag{2}
+\mbox{\large\(
+e^{\int\frac{2}{x}dx}=e^{2\ln x}=x^2
+\)}
+\end{equation}
+
+Απο $(1)$ και $(2)$: \\
+
+\begin{gather*}
+\underbrace{x^2y'+2xy}_{\left(x^2y\right)'}=x\sin x \implies \left(x^2y\right)'=x\sin x \implies \\ \implies x^2y=\int x\sin x dx +c \implies y=x^{-2}\left[c+\int x\sin x dx\right] \implies \\ \implies y=x^{-2}\left[c-x\cos x + \sin x\right] \hspace{2cm}  (3)
+\end{gather*}
+
+Για την αρχική συνθήκη:
+
+\begin{gather*}
+y\left(\frac{\pi}{2}\right)=1 \implies 1=\left(\frac{\pi}{2}\right)^{-2}\left[c-\frac{\pi}{2}\cos \frac{\pi}{2}+\sin \frac{\pi}{2}\right] \implies \\ \\ \implies 1\frac{{\pi}^2}{4}=\frac{{\pi}^2}{4}\cdot \left(\frac{\pi}{2}\right)^{-2}[c+1] \implies c+1 =\frac{
+[\pi]^2}{4} \implies \\ \\ \implies \boxed{c=\frac{{\pi}^2}{4}-1}
+\end{gather*}
+
+Άρα:
+\begin{equation*}
+\mbox{\large\(
+y=x^{-2}\left[ \left(\frac{\pi ^2}{4} -1\right) -x\cos x + \sin x \right]
+\)}
+\end{equation*}
+
+\newpage
+
+\subsection{Να λυθεί η Δ.Ε.}
+
+\begin{equation*}
+\mbox{\large\(
+y' + \tan x y =\sin x
+\)}
+\end{equation*}
+
+\subsubsection*{Λύση}
+
+Η Δ.Ε. είναι γραμμική πρώτης τάξης με $p(x)=\tan x$ και $q(x)=\sin x$
+
+Οπότε οι λύσεις της είναι: 
+
+\begin{gather*}
+y=e^{-\int \tan x dx}\left[ c+ \int\sin x e^{\int \tan x dx}dx \right] \implies \\ \\ \implies y=e^{\ln|\cos x|}\left[ c+ \int \sin x e^{-\ln|\cos x|}dx  \right] \implies \\ \\ \implies y=|\cos x| \left( c+ \int \frac{\sin x}{|\cos x|}dx \right)=|\cos x| \left(c - \ln|\cos x| \right)
+\end{gather*} 
+\\
+
+Άρα οι λύσεις της Δ.Ε. δίνονται απο την:
+
+\begin{equation*}
+\mbox{\large \(
+y=|\cos x| \left(c - \ln|\cos x| \right)
+\)}
+\end{equation*}
+
+\newpage
+
+\section{Ασκήσεις στις διαφορικές εξισώσεις Δ.Ε.}
+
+\subsection{Να χαρακτηρίσετε τις Δ.Ε.}
+
+\begin{align*}
+a)\hspace{1mm}y'y''-x&=0               &  b)\hspace{1mm}y''+4y'+4y&=8e^{-2x}              &  c)\hspace{1mm}y'''-3y'-2y&=0\\ \\
+d)\hspace{1mm}\bar{\nabla} ^2 f(x,y)&=0         &  e)\hspace{1mm}\frac{\partial f}{\partial t}&=c\bar{\nabla}^2f   &\text{, με } f=f(x,y,z)
+\end{align*}
+
+\vspace{2cm}
+
+\subsection{Να λύσετε τις διαφορικές εξισώσεις:}
+
+\begin{equation*}
+\mbox{\large\(
+y'+\frac{1}{x}y=2
+\)}
+\end{equation*}
+
+
+
+
+
+
+
+
+\end{document}
