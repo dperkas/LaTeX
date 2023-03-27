@@ -1,0 +1,415 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[english,greek]{babel}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=4
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+\graphicspath{ {C:/Users/Hp/Desktop/quartus/} }
+\usepackage{wrapfig}
+
+\title{\foreignlanguage{english}{Quartus Exercise 4 Report}}
+\author{Πέρκας Δημήτριος 4156\\Ρέτσας Κωνσταντίνος 4163\\Χατζηπούλιος Ιωάννης 4286}
+\date{\foreignlanguage{english}{April 2019}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
+
+\section{Μέρος 1ο: Συνδιαστικά Κυκλώματα}
+
+\subsection{Ερώτημα 1ο, πολυπλέκτης 4-σε-1}
+
+Αφού γράψουμε τον κώδικα για τον πολυπλέκτη, δημιουργούμε το αντίστοιχο \foreignlanguage{english}{block} για αυτόν και στη συνέχεια φτιάχνουμε το παρακάτω σχηματικό:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Mux 4-to-1 schematic}}
+\includegraphics[width = 420pt, height = 180pt]{mux4-1Schem.PNG} 
+\end{figure}
+
+Με την χρονική εξομοίωση βλέπουμε πως το κύκλωμα λειτουργεί σωστά
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Mux 4-to-1 time waveform}}
+\includegraphics[width = 440pt, height = 205pt]{mux4-1WAVE.PNG}
+\end{figure}
+
+\subsection{Ερώτημα 2ο, πολυπλέκτης 16-σε-1}
+
+Αφου έχουμε κανει τον πολυπλέκτη 4-σε-1, με την χρήση \foreignlanguage{english}{structural VHDL} φτιάχνουμε τον πολυπλέκτη 16-1. Αφού περάσουμε τον κώδικα, δημιουργούμε το σχηματικό:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Mux 16-to-1 schematic}}
+\includegraphics[width = 420pt, height = 180pt]{mux16-1Schem.PNG} 
+\end{figure}
+
+Η παρακάτω εξομοίωση έγινε στο πεδίο της συχνότητας έτσι ώστε να μπορεί να ελεχθεί ευκολότερα η λειτουργία του πολυπλέκτη:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Mux 16-to-1 frequency waveform}}
+\includegraphics[width = 430pt, height = 200pt]{mux16_1Wave.PNG}
+\end{figure}
+
+\clearpage
+
+Για τον έλεγχο των επιδώσεων του πολυπλέκτη, ανατρέχουμε στο \foreignlanguage{english}{Classic Timing Analyzer Tool} και παίρνουμε τις εξής καθυστερήσεις:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Mux 16-to-1 Delays}}
+\includegraphics[width = 170pt, height = 220pt]{mux16_1DELAYS.PNG}
+\end{figure}
+
+Βλέπουμε πως η μέγιστη καθυστέρηση είναι απο την επιλογή \foreignlanguage{english}{SEL[1]} στην έξοδο \foreignlanguage{english}{F}, η οποία είναι $15.346ns$
+
+\clearpage
+
+\subsection{Ερώτημα 3ο, Αθροιστής}
+
+Αρχικά δημιουργούμε έναν πλήρη αθροιστή σε \foreignlanguage{english}{VHDL}:
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Full Adder]
+library ieee;
+use ieee.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+
+entity full_adder is port(
+	A: in std_logic_vector(1 downto 0);
+	B: in std_logic_vector(1 downto 0);
+	cin: in std_logic;
+	sum: out std_logic_vector(1 downto 0);
+	cout: out std_logic);
+end full_adder;
+
+architecture RTL of full_adder is	
+signal InternalSum: std_logic_vector(2 downto 0);
+begin
+
+	InternalSum<="0"&A + "0"&B +"00"&cin;
+	Sum<=InternalSum(1 downto 0);
+	Cout<=InternalSum(2);
+	
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+Η εξομοίωση επιβεβαιώνει την λειτουργία του αθροιστή:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{FA waveform}}
+\includegraphics[width = 440pt, height = 200pt]{faWaveF.PNG}
+\end{figure}
+
+\clearpage
+
+Οι καθυστερήσεις του πλήρη αθροιστή φαίνονται παρακάτω:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{FA Delays}}
+\includegraphics[width = 180pt, height =90pt]{FAtime.PNG}
+\end{figure}
+
+
+Αφού ολοκρηρώσουμε τον πλήρη αθροιστή, θα χρησιμοποιήσουμε \foreignlanguage{english}{structural VHDL} για να δημιουργήσουμε έναν αθροιστή των \foreignlanguage{english}{8 bits}. Ο αρθοιστής αυτός θα χρησιμοποιήσει 8 πλήρεις αθροιστές. Ο πλήρης αθροιστής θα δηλωθεί σαν \foreignlanguage{english}{component} στο σώμα αρχιτεκτονικής του 8-μπιτου αθροιστή.
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= 8-bit Adder With Structural VHDL]
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+
+entity Adder8Bit is
+	port(
+		a, b: in std_logic_vector(7 downto 0);
+		cin: in std_logic;
+		sum: out std_logic_vector(7 downto 0);
+		cout: out std_logic);
+end Adder8Bit;
+
+architecture RTL of Adder8Bit is
+component full_adder
+	port(
+		a :in std_logic_vector(1 downto 0);
+		b :in std_logic_vector(1 downto 0);
+		cin:in std_logic;
+		sum:out std_logic_vector(1 downto 0);
+		cout: out std_logic);
+end component;
+
+signal c_int: std_logic_vector(7 downto 1);
+
+begin
+	FA0: full_adder port map (a(0),b(0),cin,sum(0),c_int(1));
+	FA1: full_adder port map (a(1),b(1),c_int(1),sum(1),c_int(2));
+	FA2: full_adder port map (a(2),b(2),c_int(2),sum(2),c_int(3));
+	FA3: full_adder port map (a(3),b(3),c_int(3),sum(3),c_int(4));
+	FA4: full_adder port map (a(4),b(4),c_int(4),sum(4),c_int(5));
+	FA5: full_adder port map (a(5),b(5),c_int(5),sum(5),c_int(6));
+	FA6: full_adder port map (a(6),b(6),c_int(6),sum(6),c_int(7));
+	FA7: full_adder port map (a(7),b(7),c_int(7),sum(7),cout);
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+\clearpage
+
+Παρακάτω βλέπουμε το σχηματικό και την χρονική εξομοίωση:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{8-bit Adder schematic}}
+\includegraphics[width = 420pt, height = 180pt]{adder8bitsSchem.PNG} 
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{8-bit Adder waveform}}
+\includegraphics[width = 490pt, height = 230pt]{adder8bitsWave.PNG}
+\end{figure}
+
+
+\subsection{Ερώτημα 4ο, Διαφορετική υλοποίηση αθροιστή}
+
+Εκτός απο την \foreignlanguage{english}{structural} υλοποίηση του αθροιστή με λογική, παρακάτω βρίσκεται ο κώδικας του 8-μπιτου αθροιστή με τον τελεστή "$+$":
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= 8-bit Adder]
+Library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+
+entity Adder_8bit1 is
+	port(
+		A: in std_logic_vector(7 downto 0);
+		B: in std_logic_vector(7 downto 0);
+		cin: in std_logic;
+		Sum: out std_logic_vector(7 downto 0);
+		cout: out std_logic);
+end Adder_8bit1;
+
+architecture RTL of Adder_8bit1 is
+	signal InternalSum: std_logic_vector(8 downto 0);
+begin
+	InternalSum<="0"&A + "0"&B +"00000000"&cin;
+	Sum<=InternalSum(7 downto 0);
+	cout<=InternalSum(8);
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+\clearpage
+
+\section{Μέρος 2ο}
+
+
+\subsection{Ερώτημα 1ο, \foreignlanguage{english}{D Flip Flop - D Latch}}
+
+Αφού γράψουμε τον κώδικα του \foreignlanguage{english}{D Flip Flop}, δημιουργούμε το σύμβολο, βάζουμε σε νέο σχηματικό τα \foreignlanguage{english}{inputs, outputs} και ελέγχουμε την λειτουργία του με την εξομοίωση:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{D Flip Flop schematic}}
+\includegraphics[width = 420pt, height = 180pt]{DffSchem.PNG} 
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{D Flip Flop waveform}}
+\includegraphics[width = 430pt, height = 210pt]{DffWave.PNG}
+\end{figure}
+
+Το κύκλωμα λειτουργεί σωστά. \\ \\ 
+
+Όμοια δημιουργούμε και το \foreignlanguage{english}{D Latch}, ελέγχουμε την λειτουργία του, και στη συνέχεια τα ενώνουμε στο σχηματικό με τον παρακάτω τρόπο:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{D Flip Flop - Latch schematic}}
+\includegraphics[width = 420pt, height = 180pt]{DffLatchSchem.PNG} 
+\end{figure}
+
+Κάνουμε την ανάλογη εξομοίωση και παρατηρούμε πως το κύκλωμα λειτουργεί σωστά, και σημειώνουμε τις καθυστερήσεις με \foreignlanguage{english}{time bars}:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{D Flip Flop - Latch waveform}}
+\includegraphics[width = 420pt, height = 200pt]{DffLatchWave.PNG}
+\end{figure}
+
+\clearpage
+
+\subsection{Ερώτημα 2ο, Κύκλωμα Καταχωρητή}
+
+Ο καταχωρητής σχεδιάστηκε με \foreignlanguage{english}{behavioral VHDL}, παρακάτω βρίσκεται ο κώδικας:
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Register with begavioral VHDL]
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity Reg8 is port(
+	D : in std_logic_vector(7 downto 0);
+	CLK, CLR, SET: in std_logic;
+	Q, Qn : out std_logic_vector(7 downto 0));
+end Reg8;
+
+architecture behavioral of Reg8 is
+	signal DFF : std_logic_vector(7 downto 0);
+	
+begin
+	seq0 : process(CLK, CLR, SET )
+	begin
+		if (CLR='1') then DFF<="00000000";
+		elsif (SET='1') then DFF<="11111111";
+		elsif (CLK'event and CLK = '1') then DFF <=D;
+		end if;
+	end process;
+	Q <= DFF; Qn <= not DFF;
+end behavioral;
+\end{lstlisting}
+\end{otherlanguage}
+
+Δημιουργούμε το σύμβολο, τρέχουμε τις εξομοιώσεις και παρατηρούμε την σωστή λειτουργία του καταχωρητή:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register schematic}}
+\includegraphics[width = 420pt, height = 180pt]{reg8schem.PNG} 
+\end{figure}
+
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register waveform}}
+\includegraphics[width = 440pt, height = 230pt]{Reg8Wave.PNG}
+\end{figure}
+
+\clearpage
+
+
+Με το \foreignlanguage{english}{Classic Timing Analyzer Tool} παίρνουμε τις εξής σύχγρονες και ασύγχρονες καθυστερήσεις:
+
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register Delays}}
+\includegraphics[width = 270pt, height = 130pt]{reg8delays.PNG} 
+\end{figure}
+
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register Asynchronous Delays}}
+\includegraphics[width = 270pt, height = 200pt]{reg8delaysAsynch.PNG} 
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register Synchronous Delays}}
+\includegraphics[width = 270pt, height = 130pt]{reg8delaysSyn.PNG} 
+\end{figure}
+
+\clearpage
+
+\subsection{Ερώτημα 3ο, Κύκλωμα Μετρητή}
+
+Θα σχεδιάσουμε έναν 8-μπιτο μετρητή ο οποίος θα μετράει από $0-255$. Έχει όλες τις ζητούμενες δυνατότητες.
+
+Για τον σχεδιασμό του, χρησιμοποιήθηκαν 2 \foreignlanguage{english}{processes}, μία για την μέτρηση και μια για τις λειτουργίες ασύγχρονης θέσης και μηδένισης.
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= VHDL Counter ]
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_arith.all;
+
+entity Counter8 is port(
+	CLK: in std_logic;
+	CLR: in std_logic;
+	SET: in std_logic;
+	count: out std_logic_vector(7 downto 0));
+end Counter8;
+
+architecture RTL of Counter8 is
+begin
+
+counter: process
+	variable value: std_logic_vector(7 downto 0):="00000000";
+	begin
+	
+	loop
+		wait until CLK='1';
+		value:=value+1;
+		count<=value;
+	end loop;
+	end process;
+	
+
+asynch: process(CLK, CLR, SET)
+	begin
+		if (CLR='1') then count<="00000000";
+		elsif (SET='1') then count<="11111111";
+		end if;
+	end process;
+
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+
+\clearpage
+
+Δημιουργήθηκε το παρακάτω σχηματικό μετα την δημιουργία του \foreignlanguage{english}{block}:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Counter schematic}}
+\includegraphics[width = 420pt, height = 180pt]{CounterSchem.PNG} 
+\end{figure}
+
+
+
+
+
+
+
+\clearpage
+
+
+\section{Παρατηρήσεις}
+
+$\bullet$ Μετά την δημιουργία του \foreignlanguage{english}{D Flip Flop}, αφού έχουμε πάρει τις καθυστερήσεις, στο \foreignlanguage{english}{Classic Timing Analyzer Tool} δεν εμφανίζεται κάποια απόδοση του \foreignlanguage{english}{flip flop}, και ο δείκτης είναι σταθερός στο $0$
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{D Flip Flop Performance}}
+\includegraphics[width = 470pt, height = 240pt]{DffPerformance.PNG}
+\end{figure} \\ \\ 
+
+$\bullet$ Κατά την δημιουργία των κυματομορφών του μετρητή παρουσιάστηκαν κάποια προβλήματα με τον \foreignlanguage{english}{compiler}, για αυτό δεν προσθέθηκε κυματομορφή στο \foreignlanguage{english}{report}. Ωστόσο, ο κώδικας αρχικά δεν έχει προβλήματα, αφου δημιουργήθηκε και το ανάλογο \foreignlanguage{english}{block}.
+
+\end{document}
