@@ -1,0 +1,283 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,greek]{babel}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{verbatim}
+\newenvironment{metaverbatim}{\verbatim}{\endverbatim}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=4
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+\usepackage{graphicx}
+\graphicspath{C:\Users\Hp\Desktop\matlabPics} 
+
+\usepackage{wrapfig}
+
+
+
+%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} IT ALL GOES LEFT
+
+
+
+
+
+  
+\begin{document}
+
+
+
+
+\title{ΤΗΛΕΠΙΚΟΙΝΩΝΙΑΚΑ ΣΥΣΤΗΜΑΤΑ \\Εργαστηριακή Άσκηση}
+\author{Πέρκας Δημήτριος 4156}
+\date{Μάιος 2020}
+
+\maketitle
+
+\pagebreak
+
+
+\tableofcontents
+\newpage
+
+
+\section{Μέρος Πρώτο}
+
+\subsection{Κώδικας \selectlanguage{english}{Matlab}}
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=MATLAB, caption= \foreignlanguage{greek}{Μέρος Πρώτο}  ]
+%PERKAS DIMITRIOS 4156
+
+clear all
+close all
+
+%% i)
+fs=10000;
+Ts=1/fs;
+t=[0:Ts:10];
+m=cos(2*pi*t);
+
+plot(t,m)
+
+%% ii)
+Ac=2;
+fc=500;
+Ts=1/fs;
+t=[0:Ts:10];
+x=(Ac+cos(2*pi*t)).*cos(2*pi*fc*t);
+plot(t,x)
+
+%% iii)
+env=abs(hilbert(x));
+t=[0:Ts:10];
+plot(t,env)
+
+
+%% iv)
+t=[0:Ts:10];
+plot(t,env-2)
+
+
+%% II(ii)
+Ac=0.7;
+fc=500;
+Ts=1/fs;
+t=[0:Ts:10];
+x=(Ac+cos(2*pi*t)).*cos(2*pi*fc*t);
+plot(t,x)
+
+
+%% II(iii)
+env=abs(hilbert(x));
+plot(t,env)
+
+
+\end{lstlisting}
+\end{otherlanguage}
+
+\pagebreak
+
+\subsection{Αποτελέσματα}
+Παρακάτω βλέπουμε τις γραφικές παραστάσεις που παίρνουμε στην έξοδο:\\
+α)\\
+\includegraphics[width=14cm, height=8cm]{1.png}
+β)\\
+\includegraphics[width=14cm, height=8cm]{2.png}
+γ)\\
+\includegraphics[width=14cm, height=8cm]{3.png}
+δ)Παρατηρούμε οτι δεν παίρνουμε το αρχικό μας σήμα πίσω. Δεν έχουμε υπερδιαμόρφωση, διότι
+\[\mu=\frac{|\max\{m(t)\}|}{A_c}=\frac{1}{2}<1 \]
+Αρα μπορούμε να πάρουμε το αρχικό μας σήμα πίσω, αφαιρώντας το $A_c=2$, κάνοντας δλαδή \foreignlanguage{english}{env-2}
+Παίρνουμε, λοιπόν, το αρχικό μας σήμα.\\
+\includegraphics[width=14cm, height=8cm]{4.png}
+\pagebreak
+
+ε-β)\\
+Για $A_c=0.7$:\\
+\includegraphics[width=14cm, height=8cm]{2b.png}
+ε-γ)\\
+\includegraphics[width=14cm, height=8cm]{2c.png}
+ε-δ)\\
+Βλέπουμε οτι ούτε σε αυτή τη περίπτωση δεν παίρνουμε το αρχικό μας σήμα πίσω. Αυτή τη φορά όμως έχουμε υπερδιαμόρφωση, διότι:
+\[\mu=\frac{|\max\{m(t)\}|}{A_c}=\frac{1}{0.7}=1.42>1 \]
+Δεν μπορούμε, συνεπώς, με $A_c=0.7$ να πάρουμε το αρχικό μας σήμα πίσω.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Μέρος Δεύτερο}
+
+\subsection{Κώδικας \selectlanguage{english}{Matlab}}
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=MATLAB, caption= SER In QPSK Modulation ]
+%PERKAS DIMITRIOS 4156
+clear all
+close all
+
+N=10^6;
+Es=1;
+EsNo_dB=10;
+EsNo=10^(EsNo_dB/10);
+err=0;
+
+s1=(sqrt(2*Es))/2 + j*(sqrt(2*Es))/2;
+s2=(sqrt(2*Es))/2 - j*(sqrt(2*Es))/2;
+s3=-(sqrt(2*Es))/2 - j*(sqrt(2*Es))/2;
+s4=-(sqrt(2*Es))/2 + j*(sqrt(2*Es))/2;
+
+for experiment = 1:N
+    %Symbol Generation For QPSK
+    y=randi(4);
+    if y==1
+        s=s1;
+    elseif y==2
+        s=s2;
+    elseif y==3
+        s=s3;
+    elseif y==4
+        s=s4;
+    end
+    
+    % Additive White Gaussian Noise     
+    sigma=sqrt(Es/(2*EsNo));
+    n1=sigma*randn;
+    n2=sigma*randn;
+    n=n1+j*n2;
+    r=s+n;
+    
+    % Symbol Detection for QPSK
+    if (real(r)>0 && imag(r)>0)
+        s_cup=s1;
+    elseif(real(r)<0 && imag(r)>0)
+        s_cup=s4;
+    elseif(real(r)>0 && imag(r)<0)
+        s_cup=s2;
+    elseif(real(r)<0 && imag(r)<0)
+        s_cup=s3;
+    end
+    
+    if( (real(s_cup)>0 && imag(s_cup)>0)~=(real(s)>0 && imag(s)>0))
+        err=err+1;
+    elseif((real(s_cup)<0 && imag(s_cup)<0)~=(real(s)<0 && imag(s)<0) )
+        err=err+1;
+    elseif((real(s_cup)<0 && imag(s_cup)>0)~=(real(s)<0 && imag(s)>0) )
+        err=err+1;
+    elseif((real(s_cup)>0 && imag(s_cup)<0)~=(real(s)>0 && imag(s)<0) )
+        err=err+1;
+    end
+    
+    
+    
+       
+end
+
+simulated_SER=err/N
+Ps=2*qfunc(sqrt(EsNo))-(qfunc(sqrt(EsNo)))^2
+
+
+
+\end{lstlisting}
+\end{otherlanguage}
+
+
+
+
+\selectlanguage{greek}{
+Ο αλγόριθμος πραγματοποιήθηκε $N=10^6$ φορές. Η αλλαγή του \foreignlanguage{english}{EsNo\_dB} γίνεται κάθε
+φορά χειροκίνητα για να πάρουμε το κάθε αποτέλεσμα.
+
+Η τιμη \foreignlanguage{english}{simulatedSER} αφορά το πειραματικό \foreignlanguage{english}{SER}, το οποίο είναι ο αριθμός των εσφαλμένων \foreignlanguage{english}{bits}(ο μετρητής), πρός τον αριθμό $Ν$ των επαναλήψεων. \\
+Το θεωρητικό \foreignlanguage{english}{SER} δίνεται με την χρήση της συνάρτησης $Q$ απο τον τύπο:
+}
+
+\[P_s=2Q\left(\sqrt{\frac{E_s}{N_0}}\right)-Q^2\left(\sqrt{\frac{E_s}{N_0}}\right)\] \\ \\ 
+
+Τα σύμβολα αποτελούν μιγαδικούς αριθμούς, συνεπώς, πραγματοποιήθηκε σύγκριση μεταξύ πραγματικού και φανταστικού μέρους των αριθμών.
+
+\subsection{Αποτελέσματα}
+
+Θέτουμε στην τιμή του \foreignlanguage{english}{EsNo\_dB} το 5 και παίρνουμε:
+\foreignlanguage{english}{
+\begin{verbatim}
+simulatedSER = \\
+    0.0743\\
+Ps =\\
+    0.0739\\
+\end{verbatim}}
+
+Για \foreignlanguage{english}{EsNo\_dB}$=8$:
+\foreignlanguage{english}{
+\begin{verbatim}
+simulatedSER = \\
+    0.0120\\
+Ps =\\
+    0.0120\\
+\end{verbatim}}
+
+Για \foreignlanguage{english}{EsNo\_dB}$=10$:
+\foreignlanguage{english}{
+\begin{verbatim}
+simulatedSER = \\
+    0.0016\\
+Ps =\\
+    0.0016\\
+\end{verbatim}}
+
+\end{document}
