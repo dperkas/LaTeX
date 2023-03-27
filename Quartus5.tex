@@ -1,0 +1,339 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[english,greek]{babel}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=4
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+\graphicspath{ {C:/Users/Hp/Desktop/quartus/} }
+\usepackage{wrapfig}
+
+\title{\foreignlanguage{english}{Quartus Exercise 5 Report}}
+\author{Πέρκας Δημήτριος 4156}
+\date{\foreignlanguage{english}{May 2019}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
+
+\section{Εισαγωγή}
+
+Το κύκλωμα αποτελεί έναν ακολουθιακό πολλαπλαστιαστή. Αποτελείται απο 4 επίπεδα, τον καταχωτητή, αθροιστή, μονάδα ελέγχου και το τελικό κύκλωμα του πολλαπλασιαστή. Η σχεδίαση απαιτεί 5 καταχωρητές, έναν αθροιστή και την μονάδα ελέγχου.
+
+Παρακάτω βρίσκονται όλοι οι κώδικες και όλες τις μονάδες, τα σχηματικά και οι κυμματομορφές, σύμφωνα με τις οδηγίες της εκφώνησης.
+
+
+\section{Μονάδα Καταχωρητή}
+
+Ο καταχωρητής έχει τις παρακάτω λειτουργίες:
+\begin{itemize}
+    \item Παράλληλη φόρτωση
+    \item Σειριακή φόρτωση
+    \item Ολίσθηση
+    \item Ασύγχρονη μηδένιση
+\end{itemize}
+
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Register VHDL Code]
+library IEEE;
+use ieee.std_logic_1164.all;
+
+entity Reg is
+	generic (n: integer:=4);
+	port(
+		D_IN: in std_logic_vector (n-1 downto 0);
+		SI, CLK, RST, SLOAD, ENABLE: in std_logic;
+		SO: out std_logic;
+		D_OUT: out std_logic_vector (n-1 downto 0));
+end Reg;
+
+architecture RTL of Reg is
+signal F: std_logic_vector (n-1 downto 0);
+begin
+p0: process(RST, CLK)
+begin
+	if (RST='1') then F<=(n-1 downto 0 => '0');
+	elsif (CLK'event and CLK='1') then
+		if (ENABLE='1') then
+			if (SLOAD='0') then F<=D_IN;
+			else F<=SI & F(n-1 downto 1);
+			end if;
+		end if;
+	end if;
+end process;
+D_OUT<=F;
+SO<=F(0);
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+Δημιουργούμε το σύμβολο, φτιάχνουμε το σχηματικό και τρέχουμε την εξομοίωση:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register Schematic}}
+\includegraphics[width = 420pt, height = 180pt]{Reg.PNG} 
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Register time waveform}}
+\includegraphics[width = 440pt, height = 205pt]{Regwave.PNG}
+\end{figure}
+
+\clearpage
+
+
+\section{Μονάδα αθροιστή}
+
+Στην σχεδίαση του αθροιστή, θα χρειαστεί να βάλουμε και το σήμα \foreignlanguage{english}{CTRL} το οπόιο θα χρειαστεί αργότερα, και καθορίζει αν θα γίνει πρόσθεση.
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Adder VHDL Code]
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity Adder is
+	generic (n: integer :=4);
+	port
+	(
+		CTRL	: in std_logic;
+		A, B	: in std_logic_vector(n-1 downto 0);
+		F		: out std_logic_vector(n-1 downto 0);
+		COUT	: out std_logic
+	);
+end Adder;
+
+architecture RTL of Adder is
+	signal Interm : std_logic_vector(n downto 0);
+begin
+
+p0: process(A, B, CTRL)
+begin
+	if (CTRL= '0') then Interm<= '0' & B;
+	else Interm<=('0' & A)+('0' & B);
+	end if;
+end process;
+F<=Interm(n-1 downto 0);
+COUT<=Interm(n);
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Adder Schematic}}
+\includegraphics[width = 420pt, height = 180pt]{adder.PNG} 
+\end{figure}
+
+
+\clearpage
+
+\section{Μονάδα Ελέγχου}
+
+Η συγκεκριμένη μονάδα είναι υπεύθυνη για τον συντονισμό των άλλων και καθορίζει πότε θα γίνει η κάθε λειτουργία.
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Control Unit VHDL Code]
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+
+entity CtrlLogic is
+	generic ( n: integer := 4 );
+	port (
+	Rst, CLK : in std_logic;
+	SL_A, SL_B, SL_H, SL_L, SL_C: out std_logic;
+	EN_A, EN_B, EN_H, EN_L, EN_C: out std_logic );
+end CtrlLogic;
+
+architecture RTL of CtrlLogic is
+	type state_type is (LOAD, MULT, HOLD);
+	type mult_type is (SHIFT, ADD);
+	signal state : state_type;
+	signal m_state : mult_type;
+	signal count : std_logic_vector (n-1 downto 0);
+
+begin
+	
+p0: process(Rst, CLK)
+begin
+	if (Rst='1') then
+	state<=LOAD;
+	count<=(n-1 downto 0 => '0');
+	elsif (CLK'event and CLK='1') then
+		case state is
+			when LOAD => if (conv_integer(count)<2*n-1) then count<=count+1;
+				else count<=(n-1 downto 0 => '0');
+					state<=MULT; m_state<=ADD;
+				end if;
+			when MULT => if (m_state=ADD) then m_state<=SHIFT;
+				elsif (m_state=SHIFT) then
+					m_state<=ADD;
+					if (conv_integer(count)<n-1) then count<=count+1;
+					else state<=HOLD;
+					end if;
+				end if;
+			when HOLD => null;
+		end case;
+	end if;
+end process;
+
+EN_A<='1' when state=LOAD else '0';
+SL_A<='1'when state=LOAD else '0';
+
+EN_B<='1'	when (state=LOAD	or (state=MULT	and m_state=SHIFT))	else '0';
+SL_B<='1'	when (state=LOAD	or (state=MULT	and m_state=SHIFT))	else '0';	
+
+EN_H<='1'	when state=MULT	else '0';
+SL_H<='1'	when m_state=SHIFT	else '0';	
+
+EN_L<='1'	when (state=MULT	and m_state=SHIFT)	else '0';
+SL_L<='1'	when (state=MULT	and m_state=SHIFT)	else '0';
+
+EN_C<='1'	when (state=MULT	and m_state=ADD)	else '0';
+SL_C<='0';
+
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+Παρακάτω βλέπουμε το σχηματικό, την κυματομορφή και τις καθυστερήσεις:
+
+\begin{figure}[h!]
+  \caption{\foreignlanguage{english}{Control Unit schematic}}
+\includegraphics[width = 420pt, height = 180pt]{crtl.PNG} 
+\end{figure}
+
+\clearpage
+
+\section{Σχεδίαση Πολλαπλαστιαστή}
+Στην τελική σχεδίαση του πολλαπλασιαστή, πρέπει να βάλουμε σαν \foreignlanguage{english}{components} όλες τις παραπάνω μονάδες για να τις διασυνδέσουμε και να πάρουμε το τελικό κύκλωμα.
+
+
+\begin{otherlanguage}{english}
+\begin{lstlisting}[language=VHDL, caption= Multiplier Code VHDL]
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity Multiplier is
+	generic (n: integer :=4);
+	port (
+		Rst, CLK, SI : in std_logic;
+		Low, High : out std_logic_vector (n-1 downto 0));
+end Multiplier;
+
+architecture RTL of Multiplier is
+
+component CtrlLogic
+	generic ( n: integer := 4 );
+	port (
+		Rst, CLK : in std_logic;
+		SL_A, SL_B, SL_H, SL_L, SL_C : out std_logic;
+		EN_A, EN_B, EN_H, EN_L, EN_C : out std_logic );
+end component;
+
+component Adder
+	generic (n: integer :=4);
+	port (
+		CTRL : in std_logic;
+		A, B : in std_logic_vector (n-1 downto 0);
+		F : out std_logic_vector (n-1 downto 0);
+		COUT : out std_logic );
+end component;
+
+component Reg
+	generic (n: integer:=4);
+	port (
+		D_IN: in std_logic_vector (n-1 downto 0);
+		SI, CLK, RST, SLOAD, ENABLE: in std_logic;
+		SO: out std_logic;
+		D_OUT: out std_logic_vector (n-1 downto 0));
+end component;
+
+signal SL_A, EN_A, SO_A, SL_B, EN_B, SO_B, SL_C, EN_C, SO_C: std_logic;
+signal SL_H, EN_H, SO_H, SL_L, EN_L, SO_L: std_logic;
+signal A,B,F_ADD, H: std_logic_vector (n-1 downto 0);
+signal C, COUT : std_logic_vector (0 downto 0);
+
+begin
+uA: Reg generic map(n=>4)
+	port map( D_IN=>(n-1 downto 0=>'0'), SI=>SI, CLK=>CLK, RST=>RST,SLOAD=>SL_A,
+			ENABLE=>EN_A, SO=>SO_A, D_OUT=>A);
+uB: Reg generic map(n=>4)
+	port map(D_IN=>(n-1 downto 0=>'0'), SI=>SO_A, CLK=>CLK, RST=>RST,SLOAD=>SL_B,
+			ENABLE=>EN_B, SO=>SO_B, D_OUT=>B);
+uAdder: Adder generic map(n=>4)
+	port map(CTRL=>B(0), A=>A, B=>H, F=>F_ADD, COUT=>COUT(0));
+uC: Reg generic map(n=>1)
+	port map(D_IN=>COUT, SI=>'0', CLK=>CLK, RST=>RST, SLOAD=>SL_C, ENABLE=>EN_C,
+			SO=>SO_C, D_OUT=>C);
+uH: Reg generic map(n=>4)
+	port map(D_IN=>F_ADD, SI=>SO_C, CLK=>CLK, RST=>RST, SLOAD=>SL_H, ENABLE=>EN_H,
+			SO=>SO_H,D_OUT=>H);
+uL: Reg generic map(n=>4)
+	port map(D_IN=>(n-1 downto 0=>'0'), SI=>S0_H, CLK=>CLK, RST=>RST, SLOAD=>SL_L,
+			ENABLE=>EN_L, SO=>SO_L, D_OUT=>low);
+uCTRL: CtrlLogic generic map(n=>4)
+	port map (Rst=>RST, CLK=>CLK, SL_A=>SL_A, SL_B=>SL_B, SL_H=>SL_H, SL_L=>SL_L,
+			SL_C=>SL_C, EN_A=>EN_A, EN_B=>EN_B, EN_H=>EN_H, EN_L=>EN_L, EN_C=>EN_C);
+			
+High<=H;
+
+end RTL;
+\end{lstlisting}
+\end{otherlanguage}
+
+
+\clearpage
+
+
+\section{Παρατηρήσεις}
+
+$\bullet$ Κατα την διάρκεια του \foreignlanguage{english}{project} οι κυματομορφές του αθροιστή, της μονάδας ελέγχου και του πολλαπλασιαστή λειτουργούσαν κανονικά και έβγαζαν τα αποτελέσματα που αναγράφονται και στην εκφώνιση, αφου όλα τα βήματα ακολουθήθηκαν ρητά.
+
+Ωστόσο, έχοντας τελείωσει την εργασία, όταν ξεκίνησα το \foreignlanguage{english}{report} και πήγα να τρέξω τις κυματομορφές και τις καθυστερήσεις,ο \foreignlanguage{english}{compiler} μου έβγαζε προβλήματα, γιατι είχα ανεβεί στάδια στην ιεραρχία και λόγω κάποιου προβλήματος στο τελευταίο επίπεδο, δεν έτρεχαν και τα προηγούμενα.
+\end{document}
