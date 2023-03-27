@@ -1,0 +1,56 @@
+%Opening code for Greek document(using \foreignlanguage{english}{...} for English text)
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[english,greek]{babel}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=4
+}
+
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+\graphicspath{ {add path here} }
+\usepackage{wrapfig}
+
+\title{\foreignlanguage{english}{Quartus Exercise 4 Report}}
+\author{Πέρκας Δημήτριος}
+\date{\foreignlanguage{english}{add date here}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
