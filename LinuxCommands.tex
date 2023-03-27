@@ -1,0 +1,41 @@
+\documentclass[]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{tcolorbox,url}
+\tcbuselibrary{skins,xparse,listings}
+
+
+\title{Linux Commands}
+\author{Dimitris Perkas}
+\date{March 2023}
+
+\begin{document}
+
+
+
+\maketitle
+\pagebreak
+
+\section{Memory}
+
+
+\newtcblisting{ubuntu}{colback=violet!50!black,
+colupper=white,colframe=gray!65!black,listing only,
+listing options={style=tcblatex,language=sh,escapeinside=||,},
+title={\textcolor{orange}{\Huge{$\bullet$}}{\textcolor{gray}{\Huge{$\bullet\bullet$}}}},
+every listing line={\textcolor{lime}{\small\ttfamily\bfseries root@ubuntu{\textcolor{white}:}\textcolor{cyan!60}{\url{~}}{\textcolor{white}\$} }}}
+\newlength{\Lind}
+\setbox0\hbox{\small\ttfamily\bfseries root@}
+\setlength{\Lind}{\the\dimexpr\wd0+1pt}
+\newcommand{\LR}{\\\hspace*{-\Lind}}
+
+
+
+\begin{ubuntu}
+sudo lshw -short -C memory|\LR| 
+\end{ubuntu}
+
+
+
+
+
+\end{document}
