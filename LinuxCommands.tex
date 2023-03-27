@@ -4,38 +4,276 @@
 \tcbuselibrary{skins,xparse,listings}
 
 
-\title{Linux Commands}
-\author{Dimitris Perkas}
-\date{March 2023}
 
 \begin{document}
 
 
+\title{Linux Commands}
+\author{Perkas Dimitrios}
 
 \maketitle
+
 \pagebreak
+
+
+\tableofcontents
+\newpage
+
+
+
 
 \section{Memory}
 
 
+
+
+
 \newtcblisting{ubuntu}{colback=violet!50!black,
 colupper=white,colframe=gray!65!black,listing only,
-listing options={style=tcblatex,language=sh,escapeinside=||,},
+listing options={style=tcblatex,language=sh,escapeinside=``,},
 title={\textcolor{orange}{\Huge{$\bullet$}}{\textcolor{gray}{\Huge{$\bullet\bullet$}}}},
-every listing line={\textcolor{lime}{\small\ttfamily\bfseries root@ubuntu{\textcolor{white}:}\textcolor{cyan!60}{\url{~}}{\textcolor{white}\$} }}}
-\newlength{\Lind}
-\setbox0\hbox{\small\ttfamily\bfseries root@}
-\setlength{\Lind}{\the\dimexpr\wd0+1pt}
-\newcommand{\LR}{\\\hspace*{-\Lind}}
+every listing line={\MyUbuntuPrompt}}
+\pgfkeys{/ubuntu/.cd,
+user/.code={\gdef\MyUbuntuUser{#1}},user={},
+host/.code={\gdef\MyUbuntuHost{#1}},host={},
+color/.code={\gdef\MyUbuntuColor{#1}},color=white,
+prompt char/.code={\gdef\MyUbuntuPromptChar{#1}},prompt char=\#,
+root/.style={user=root,host=ubuntu,color=lime,prompt char=\$},
+bob/.style={user=bob,host=remotehost,color=cyan},
+}
+\newcommand{\SU}[1]{\pgfkeys{/ubuntu/.cd,#1}%
+\gdef\MyUbuntuPrompt{\textcolor{\MyUbuntuColor}{\small\ttfamily\bfseries \MyUbuntuUser@\MyUbuntuHost{\textcolor{white}:}\textcolor{cyan!60}{\url{~}}{\textcolor{white}\MyUbuntuPromptChar} }}}
+\newcommand{\StartConsole}{\gdef\MyUbuntuPrompt{}}
 
 
+
+
+
+%----------------------------------------------------------------------------------
+%\SU{user=root,host=ubuntu,color=lime}
+%\begin{ubuntu}
+%whoami `\StartConsole`
+%root `\SU{root}` 
+%id `\StartConsole` 
+%uid=0(root) gid=0(root) groups=0(root)`\SU{root}`
+%hostname `\StartConsole`
+%ubuntu`\SU{root}`
+%ssh bob@remotehost`\StartConsole`
+%bob@remotehost's`\ `password:
+%Linux remotehost 2.6.32-5-686 #1 SMP Sun Sep 23 09:49:36 UTC 2012 i686
+%You have mail.
+%Last login: Wed Oct 16 01:12:35 2012 from localhost
+%`\SU{bob}`
+%whoami`\StartConsole`
+%bob`\SU{bob}`
+%_
+%\end{ubuntu}
+%----------------------------------------------------------------------------------
+  
+%$sudo lshw -short -C memory
+
+%$cat /proc/meminfo
+
+%$free
+
+%$sudo dmidecode --type 17
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\SU{user=root,host=ubuntu,color=lime}
+\begin{ubuntu}
+sudo lshw -short -C memory `\StartConsole`
+H/W path       Device      Class          Description
+=====================================================
+/0/0                       memory         128KiB BIOS
+/0/4/6                     memory         64KiB L1 cache
+/0/4/7                     memory         512KiB L2 cache
+/0/4/8                     memory         3MiB L3 cache
+/0/5                       memory         64KiB L1 cache
+/0/28                      memory         8GiB System Memory
+/0/28/0                    memory         8GiB SODIMM DDR4 Synchronous 2133 MHz (0,5 ns)
+/0/28/1                    memory         SODIMM DDR Synchronous 2133 MHz (0,5 ns) [empty]
+/0/100/1f.2                memory         Memory controller
+
+`\SU{root}`
+\end{ubuntu}
 
 \begin{ubuntu}
-sudo lshw -short -C memory|\LR| 
+free `\StartConsole`
+               total        used        free      shared  buff/cache   available
+Mem:         8028508     2097236     2552936      460480     3378336     5199924
+Swap:        2097148           0     2097148
+`\SU{root}`
+\end{ubuntu}
+In GB:
+\begin{ubuntu}
+free -g `\StartConsole`
+               total        used        free      shared  buff/cache   available
+Mem:               7           2           2           0           3           4
+Swap:              1           0           1
+
+`\SU{root}`
 \end{ubuntu}
 
 
+Checking only RAM speed:
+\begin{ubuntu}
+sudo dmidecode -t memory | grep -i "speed" `\StartConsole`
+	Speed: 2133 MT/s
+	Configured Memory Speed: 2133 MT/s
+	Speed: 2133 MT/s
+	Configured Memory Speed: 2133 MT/s
+`\SU{root}`
+\end{ubuntu}
 
+Checking total available RAM:
+\begin{ubuntu}
+grep MemTotal /proc/meminfo `\StartConsole`
+MemTotal:        8028508 kB
+`\SU{root}`
+\end{ubuntu}
+
+
+\begin{ubuntu}
+cat /proc/meminfo `\StartConsole`
+MemTotal:        8028508 kB
+MemFree:         2558856 kB
+MemAvailable:    5206180 kB
+Buffers:          147760 kB
+Cached:          3111336 kB
+SwapCached:            0 kB
+Active:          1587168 kB
+Inactive:        3108592 kB
+Active(anon):       9312 kB
+Inactive(anon):  1875220 kB
+Active(file):    1577856 kB
+Inactive(file):  1233372 kB
+Unevictable:      332180 kB
+Mlocked:              32 kB
+SwapTotal:       2097148 kB
+SwapFree:        2097148 kB
+Zswap:                 0 kB
+Zswapped:              0 kB
+Dirty:               264 kB
+Writeback:             0 kB
+AnonPages:       1768908 kB
+Mapped:           838268 kB
+Shmem:            460584 kB
+KReclaimable:     119688 kB
+Slab:             271012 kB
+SReclaimable:     119688 kB
+SUnreclaim:       151324 kB
+KernelStack:       11904 kB
+PageTables:        35652 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     6111400 kB
+Committed_AS:    8312908 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       48452 kB
+VmallocChunk:          0 kB
+Percpu:             4784 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:      273812 kB
+DirectMap2M:     8003584 kB
+DirectMap1G:           0 kB
+
+`\SU{root}`
+\end{ubuntu}
+
+\pagebreak
+
+All RAM info:
+
+\begin{ubuntu}
+sudo dmidecode --type 17 `\StartConsole`
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.8 present.
+
+Handle 0x0029, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0028
+	Error Information Handle: No Error
+	Total Width: 64 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: SODIMM
+	Set: None
+	Locator: Bottom-slot 1(top)
+	Bank Locator: BANK 0
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MT/s
+	Manufacturer: Samsung
+	Serial Number: 52221322
+	Asset Tag: 9876543210
+	Part Number: M471A1K43CB1-CRC    
+	Rank: 1
+	Configured Memory Speed: 2133 MT/s
+	Minimum Voltage: 1.25 V
+	Maximum Voltage: 1.5 V
+	Configured Voltage: 1.2 V
+
+Handle 0x002A, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0028
+	Error Information Handle: No Error
+	Total Width: Unknown
+	Data Width: Unknown
+	Size: No Module Installed
+	Form Factor: SODIMM
+	Set: None
+	Locator: Bottom-slot 2(under)
+	Bank Locator: BANK 2
+	Type: DDR
+	Type Detail: Synchronous
+	Speed: 2133 MT/s
+	Manufacturer: 0000
+	Serial Number: 00000000
+	Asset Tag: 9876543210
+	Part Number:                     
+	Rank: Unknown
+	Configured Memory Speed: 2133 MT/s
+	Minimum Voltage: 1.25 V
+	Maximum Voltage: 1.5 V
+	Configured Voltage: 1.2 V
+
+`\SU{root}`
+\end{ubuntu}
 
 
 \end{document}
+
+
+
+
+
+
