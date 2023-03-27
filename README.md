@@ -1,2 +1,3 @@
 # LaTeX
-LaTeX coding
+LaTeX coding projects 
+@author Dimitris Perkas
